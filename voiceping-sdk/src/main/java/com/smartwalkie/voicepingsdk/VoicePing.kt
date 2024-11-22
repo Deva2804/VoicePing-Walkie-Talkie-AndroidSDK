@@ -128,7 +128,7 @@ object VoicePing {
      * @param callback    OutgoingTalkCallback
      */
     fun startTalking(receiverId: String, channelType: Int, callback: OutgoingTalkCallback?) {
-        recorder.startTalking(getFullId(receiverId), channelType, callback, null, null)
+        recorder.startTalking(getFullId(receiverId), channelType, callback, null, null, null)
     }
 
     /**
@@ -146,7 +146,7 @@ object VoicePing {
         callback: OutgoingTalkCallback?,
         destinationPath: String?
     ) {
-        recorder.startTalking(getFullId(receiverId), channelType, callback, destinationPath, null)
+        recorder.startTalking(getFullId(receiverId), channelType, callback, destinationPath, null, null)
     }
 
     /**
@@ -172,7 +172,38 @@ object VoicePing {
             channelType,
             callback,
             destinationPath,
-            recorder
+            recorder,
+            null
+        )
+    }
+
+    /**
+     * Start PTT Talk using VoicePing's PTT functionality. Save recorded audio to the destination
+     * path at the end of the talk. The saved file can be played using VoicePingPlayer. Add custom
+     * audio recorder using CustomAudioRecorder.
+     *
+     * @param receiverId      Receiver ID for private channel, or Group ID for group channel
+     * @param channelType     ChannelType.PRIVATE or ChannelType.GROUP
+     * @param callback        OutgoingTalkCallback
+     * @param destinationPath Destination path
+     * @param recorder        CustomAudioRecorder
+     * @param data            String data for tags
+     */
+    fun startTalking(
+        receiverId: String,
+        channelType: Int,
+        callback: OutgoingTalkCallback?,
+        destinationPath: String?,
+        recorder: CustomAudioRecorder?,
+        data: String
+    ) {
+        this.recorder.startTalking(
+            getFullId(receiverId),
+            channelType,
+            callback,
+            destinationPath,
+            recorder,
+            data,
         )
     }
 

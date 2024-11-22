@@ -49,6 +49,8 @@ class Recorder implements OutgoingAudioListener, AudioRecorder {
     private AudioLocalSaver mAudioLocalSaver;
     private CustomAudioRecorder mCustomAudioRecorder;
 
+    private String mData;
+
     private Runnable mStartTalkingRunner = new Runnable() {
         @Override
         public void run() {
@@ -118,7 +120,7 @@ class Recorder implements OutgoingAudioListener, AudioRecorder {
         mUserId = userId;
     }
 
-    public void startTalking(String receiverId, int channelType, OutgoingTalkCallback callback, String destinationPath, CustomAudioRecorder recorder) {
+    public void startTalking(String receiverId, int channelType, OutgoingTalkCallback callback, String destinationPath, CustomAudioRecorder recorder, String data) {
         // Network check
         if (!NetworkUtil.isNetworkConnected(mContext)) {
             callback.onOutgoingTalkError(new VoicePingException("Please check your internet connection!", ErrorCode.INTERNET_DISCONNECTED));
@@ -135,6 +137,7 @@ class Recorder implements OutgoingAudioListener, AudioRecorder {
 //        Log.d(TAG, "startTalk at: " + System.currentTimeMillis());
         mReceiverId = receiverId;
         mChannelType = channelType;
+        mData = data;
         mChannel = new Channel(mChannelType, mUserId, mReceiverId);
         mOutgoingTalkCallback = callback;
         mIsRecording = true;
@@ -461,7 +464,7 @@ class Recorder implements OutgoingAudioListener, AudioRecorder {
             byte[] accumulatedData = outputStream.toByteArray();
 //            Log.d(TAG, "send voice message, counter: " + counter + ", total data: " + accumulatedData.length);
             Message message = MessageHelper.createAudioMessage(mUserId, mReceiverId,
-                    mChannelType, accumulatedData, accumulatedData.length);
+                    mChannelType, accumulatedData, accumulatedData.length, mData);
             if (message != null) mConnection.send(message.getPayload());
         }
 

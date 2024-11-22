@@ -11,8 +11,10 @@ interface IncomingTalkListener {
      * Invoked after incoming talk started.
      *
      * @param audioReceiver AudioReceiver
+     * @param activeChannels ChannelName
+     * @param data customData
      */
-    fun onIncomingTalkStarted(audioReceiver: AudioReceiver, activeChannels: List<Channel>)
+    fun onIncomingTalkStarted(audioReceiver: AudioReceiver, activeChannels: List<Channel>, data: String)
 
     /**
      * Invoked after incoming talk stopped.

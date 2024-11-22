@@ -257,7 +257,7 @@ class Player implements IncomingAudioListener {
                     session.setStartSignal(true);
                     mActiveSessions.put(channel.toString(), session);
                     if (mIncomingTalkListener != null) {
-                        mIncomingTalkListener.onIncomingTalkStarted(session, getActiveChannels());
+                        mIncomingTalkListener.onIncomingTalkStarted(session, getActiveChannels(), message.getData());
                     }
                 }
                 break;
@@ -271,7 +271,7 @@ class Player implements IncomingAudioListener {
                         initAudioTrackIfNeeded();
                         session.setAudioSessionId(mAudioTrack.getAudioSessionId());
                         if (mIncomingTalkListener != null) {
-                            mIncomingTalkListener.onIncomingTalkStarted(session, getActiveChannels());
+                            mIncomingTalkListener.onIncomingTalkStarted(session, getActiveChannels(), message.getData());
                         }
                     }
                 } else {
@@ -281,7 +281,7 @@ class Player implements IncomingAudioListener {
                     session.setStartSignal(true);
                     mActiveSessions.put(channel.toString(), session);
                     if (mIncomingTalkListener != null) {
-                        mIncomingTalkListener.onIncomingTalkStarted(session, getActiveChannels());
+                        mIncomingTalkListener.onIncomingTalkStarted(session, getActiveChannels(), message.getData());
                     }
                 }
                 if (!session.isActive()) return;

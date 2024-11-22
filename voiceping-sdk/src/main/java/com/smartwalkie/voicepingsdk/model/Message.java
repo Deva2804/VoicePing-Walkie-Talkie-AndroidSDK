@@ -36,6 +36,16 @@ public class Message {
     private String content;
     private String format;
 
+    public String getData() {
+        return data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
+    }
+
+    private String data;
+
     private boolean needToPlaySubsequentMessage;
     private boolean isLastItemInList;
     private boolean isMutedText;
