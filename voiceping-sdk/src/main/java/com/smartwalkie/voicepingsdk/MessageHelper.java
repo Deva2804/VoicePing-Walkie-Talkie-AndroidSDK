@@ -8,6 +8,7 @@ import com.smartwalkie.voicepingsdk.model.MessageType;
 
 import org.msgpack.MessagePack;
 import org.msgpack.packer.Packer;
+import org.msgpack.type.Value;
 import org.msgpack.type.ValueType;
 import org.msgpack.unpacker.MessagePackUnpacker;
 
@@ -31,8 +32,6 @@ class MessageHelper {
             int messageType = unpacker.readInt();
             String senderId = unpacker.getNextType() == ValueType.INTEGER ?
                     String.valueOf(unpacker.readInt()) : unpacker.readString();
-            String data = String.valueOf(unpacker.readString());
-
             String receiverId = unpacker.getNextType() == ValueType.INTEGER ?
                     String.valueOf(unpacker.readInt()) : unpacker.readString();
 
@@ -67,10 +66,13 @@ class MessageHelper {
                 message.setMessageType(messageType);
                 message.setSenderId(senderId);
                 message.setReceiverId(receiverId);
-                message.setData(data);
+
 
                 if (message.getMessageType() == MessageType.START_TALKING) {
                     message.setDuration(unpacker.readLong());
+                    String data = unpacker.getNextType() == ValueType.INTEGER ?
+                            String.valueOf(unpacker.readInt()) : unpacker.readString();
+                    message.setData(data);
                 } else if (message.getMessageType() == MessageType.AUDIO) {
                     message.setPayload(unpacker.readByteArray());
                     message.addData(message.getPayload());
@@ -135,17 +137,18 @@ class MessageHelper {
         return out.toByteArray();
     }
 
-    public static Message createAckStartMessage(String senderId, String receiverId, int channelType, long duration) {
+    public static Message createAckStartMessage(String senderId, String receiverId, int channelType, long duration, String data) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         Packer packer = mMessagePack.createPacker(out);
 
         try {
-            packer.writeArrayBegin(5);
+            packer.writeArrayBegin(6);
             packer.write(channelType);
             packer.write(MessageType.START_TALKING);
             packer.write(senderId);
             packer.write(receiverId);
             packer.write(duration);
+            packer.write(data);
             packer.writeArrayEnd(true);
 
             /*String key = String.format("%d_%s_%s", channelType, receiverId, senderId);
@@ -159,6 +162,7 @@ class MessageHelper {
             message.setSenderId(senderId);
             message.setReceiverId(receiverId);
             message.setDuration(duration);
+            message.setData(data);
             message.setPayload(out.toByteArray());
 
 //            mOutgoingMessages.put(key, message);
@@ -170,7 +174,7 @@ class MessageHelper {
         }
     }
 
-    public static Message createAudioMessage(String senderId, String receiverId, int channelType, byte[] payload, int length, String data) {
+    public static Message createAudioMessage(String senderId, String receiverId, int channelType, byte[] payload, int length) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         Packer packer = mMessagePack.createPacker(out);
         try {
@@ -181,7 +185,6 @@ class MessageHelper {
             packer.write(senderId);
             packer.write(receiverId);
             packer.write(payload, 0, length);
-            packer.write(data);
             packer.writeArrayEnd(true);
 
 //            String key = String.format("%d_%s_%s", channelType, receiverId, senderId);
@@ -201,8 +204,6 @@ class MessageHelper {
             message.setReceiverId(receiverId);
             message.addData(payload);
             message.setPayload(out.toByteArray());
-            message.setData(data);
-
             return message;
         } catch (IOException e) {
             e.printStackTrace();

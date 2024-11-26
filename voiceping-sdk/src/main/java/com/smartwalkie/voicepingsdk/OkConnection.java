@@ -73,7 +73,7 @@ class OkConnection implements Connection {
                     case CONNECTED:
                         updateConnectionState(ConnectionState.CONNECTED);
                         send(MessageHelper.createConnectionMessage(mUserId));
-                        Message dummyAckStart = MessageHelper.createAckStartMessage(mUserId, "00000", ChannelType.PRIVATE, System.currentTimeMillis());
+                        Message dummyAckStart = MessageHelper.createAckStartMessage(mUserId, "00000", ChannelType.PRIVATE, System.currentTimeMillis(),"");
                         if (dummyAckStart != null) {
                             send(dummyAckStart.getPayload());
                         }

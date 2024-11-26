@@ -66,7 +66,7 @@ class VoicePingButton @JvmOverloads constructor(
                 // PTT button pressed
                 if (isValid) {
                     layoutVpButton.setBackgroundResource(R.drawable.bg_rounded_yellow)
-                    VoicePing.startTalking(targetId, channelType, this)
+                    VoicePing.startTalking(targetId, channelType, this,null,null,"Hello Deva")
                     listener?.onStarted()
                 } else {
                     layoutVpButton.setBackgroundResource(R.drawable.bg_rounded_grey)
