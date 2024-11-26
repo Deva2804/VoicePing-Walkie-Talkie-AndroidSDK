@@ -175,8 +175,10 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener,
     // IncomingTalkListener
     override fun onIncomingTalkStarted(
         audioReceiver: AudioReceiver,
-        activeChannels: List<Channel>
+        activeChannels: List<Channel>,
+        data: String
     ) {
+        log("onIncomingTalkStarted, data: $data")
         log("onIncomingTalkStarted, channel: ${audioReceiver.channel.toString()}, session id: ${audioReceiver.audioSessionId}")
         // Audio processing
         Utils.enhanceLoudnessIfPossible(audioReceiver.audioSessionId, 300)
