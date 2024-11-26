@@ -290,8 +290,8 @@ class Player implements IncomingAudioListener {
                 mBackgroundHandler.postDelayed(session.getTimeoutCheckRunner(), 5000);
                 break;
             case MessageType.STOP_TALKING:
-//                Log.d(TAG, "onStopTalkingMessage, message: " + message.toString());
-//                Log.d(TAG, "onStopTalkingMessage, ack id: " + message.getAckIds());
+                Log.d(TAG, "onStopTalkingMessage, message: " + message.toString());
+                Log.d(TAG, "onStopTalkingMessage, ack id: " + message.getAckIds());
                 stopPlaying(channel, message);
                 break;
         }

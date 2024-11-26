@@ -37,6 +37,9 @@ public class Message {
     private String format;
 
     public String getData() {
+        if(data == null){
+            return "";
+        }
         return data;
     }
 

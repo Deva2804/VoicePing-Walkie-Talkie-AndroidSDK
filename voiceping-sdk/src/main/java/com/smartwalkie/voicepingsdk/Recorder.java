@@ -1,5 +1,6 @@
 package com.smartwalkie.voicepingsdk;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.AudioRecord;
@@ -105,6 +106,7 @@ class Recorder implements OutgoingAudioListener, AudioRecorder {
         mOpus = new Opus(audioParam.getSampleRate(), audioParam.getChannelSize());
     }
 
+    @SuppressLint("MissingPermission")
     private void initAudioRecord(AudioParam audioParam) {
 //        Log.d(TAG, "init audio record");
 //        stopAudioRecording();
@@ -121,6 +123,7 @@ class Recorder implements OutgoingAudioListener, AudioRecorder {
     }
 
     public void startTalking(String receiverId, int channelType, OutgoingTalkCallback callback, String destinationPath, CustomAudioRecorder recorder, String data) {
+        Log.d("Deva", "startTalking data" + data);
         // Network check
         if (!NetworkUtil.isNetworkConnected(mContext)) {
             callback.onOutgoingTalkError(new VoicePingException("Please check your internet connection!", ErrorCode.INTERNET_DISCONNECTED));
@@ -189,7 +192,7 @@ class Recorder implements OutgoingAudioListener, AudioRecorder {
     private void sendAckStart() {
 //        Log.d(TAG, "sendAckStart");
         Message message = MessageHelper.createAckStartMessage(
-                mUserId, mReceiverId, mChannelType, System.currentTimeMillis());
+                mUserId, mReceiverId, mChannelType, System.currentTimeMillis(), mData);
         mConnection.send(message.getPayload());
         mBackgroundHandler.postDelayed(mAckStartTimeoutCheckRunner, ACK_TIMEOUT_IN_MILLIS);
     }
@@ -462,9 +465,8 @@ class Recorder implements OutgoingAudioListener, AudioRecorder {
 
         private void sendVoiceMessage() {
             byte[] accumulatedData = outputStream.toByteArray();
-//            Log.d(TAG, "send voice message, counter: " + counter + ", total data: " + accumulatedData.length);
             Message message = MessageHelper.createAudioMessage(mUserId, mReceiverId,
-                    mChannelType, accumulatedData, accumulatedData.length, mData);
+                    mChannelType, accumulatedData, accumulatedData.length);
             if (message != null) mConnection.send(message.getPayload());
         }
 
