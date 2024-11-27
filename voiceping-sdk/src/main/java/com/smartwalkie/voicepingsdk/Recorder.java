@@ -123,7 +123,6 @@ class Recorder implements OutgoingAudioListener, AudioRecorder {
     }
 
     public void startTalking(String receiverId, int channelType, OutgoingTalkCallback callback, String destinationPath, CustomAudioRecorder recorder, String data) {
-        Log.d("Deva", "startTalking data" + data);
         // Network check
         if (!NetworkUtil.isNetworkConnected(mContext)) {
             callback.onOutgoingTalkError(new VoicePingException("Please check your internet connection!", ErrorCode.INTERNET_DISCONNECTED));
