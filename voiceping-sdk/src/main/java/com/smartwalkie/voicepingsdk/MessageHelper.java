@@ -70,9 +70,6 @@ class MessageHelper {
 
                 if (message.getMessageType() == MessageType.START_TALKING) {
                     message.setDuration(unpacker.readLong());
-                    String data = unpacker.getNextType() == ValueType.INTEGER ?
-                            String.valueOf(unpacker.readInt()) : unpacker.readString();
-                    message.setData(data);
                 } else if (message.getMessageType() == MessageType.AUDIO) {
                     message.setPayload(unpacker.readByteArray());
                     message.addData(message.getPayload());
@@ -107,7 +104,9 @@ class MessageHelper {
                     message.setContent(unpacker.readString());
                     Log.d(TAG, "message type: DUPLICATED_LOGIN, content: " + message.getContent());
                 }
-
+                String data = unpacker.getNextType() == ValueType.INTEGER ?
+                        String.valueOf(unpacker.readInt()) : unpacker.readString();
+                message.setData(data);
                 unpacker.readArrayEnd();
                 stream.close();
 
@@ -164,7 +163,6 @@ class MessageHelper {
             message.setDuration(duration);
             message.setData(data);
             message.setPayload(out.toByteArray());
-
 //            mOutgoingMessages.put(key, message);
 
             return message;
@@ -174,17 +172,18 @@ class MessageHelper {
         }
     }
 
-    public static Message createAudioMessage(String senderId, String receiverId, int channelType, byte[] payload, int length) {
+    public static Message createAudioMessage(String senderId, String receiverId, int channelType, byte[] payload, int length, String data) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         Packer packer = mMessagePack.createPacker(out);
         try {
 
-            packer.writeArrayBegin(5);
+            packer.writeArrayBegin(6);
             packer.write(channelType);
             packer.write(MessageType.AUDIO);
             packer.write(senderId);
             packer.write(receiverId);
             packer.write(payload, 0, length);
+            packer.write(data);
             packer.writeArrayEnd(true);
 
 //            String key = String.format("%d_%s_%s", channelType, receiverId, senderId);
@@ -204,6 +203,7 @@ class MessageHelper {
             message.setReceiverId(receiverId);
             message.addData(payload);
             message.setPayload(out.toByteArray());
+            message.setData(data);
             return message;
         } catch (IOException e) {
             e.printStackTrace();

@@ -243,6 +243,7 @@ class Player implements IncomingAudioListener {
     @Override
     public void onMessageReceived(Message message) {
         Log.d(TAG, "onMessageReceived: " + MessageType.getText(message.getMessageType()));
+        String data =  message.getData();
         final Channel channel = new Channel(
                 message.getChannelType(), message.getSenderId(), message.getReceiverId());
         switch (message.getMessageType()) {
@@ -257,7 +258,7 @@ class Player implements IncomingAudioListener {
                     session.setStartSignal(true);
                     mActiveSessions.put(channel.toString(), session);
                     if (mIncomingTalkListener != null) {
-                        mIncomingTalkListener.onIncomingTalkStarted(session, getActiveChannels(), message.getData());
+                        mIncomingTalkListener.onIncomingTalkStarted(session, getActiveChannels(), data);
                     }
                 }
                 break;
@@ -271,7 +272,7 @@ class Player implements IncomingAudioListener {
                         initAudioTrackIfNeeded();
                         session.setAudioSessionId(mAudioTrack.getAudioSessionId());
                         if (mIncomingTalkListener != null) {
-                            mIncomingTalkListener.onIncomingTalkStarted(session, getActiveChannels(), message.getData());
+                            mIncomingTalkListener.onIncomingTalkStarted(session, getActiveChannels(), data);
                         }
                     }
                 } else {
@@ -281,7 +282,7 @@ class Player implements IncomingAudioListener {
                     session.setStartSignal(true);
                     mActiveSessions.put(channel.toString(), session);
                     if (mIncomingTalkListener != null) {
-                        mIncomingTalkListener.onIncomingTalkStarted(session, getActiveChannels(), message.getData());
+                        mIncomingTalkListener.onIncomingTalkStarted(session, getActiveChannels(), data);
                     }
                 }
                 if (!session.isActive()) return;

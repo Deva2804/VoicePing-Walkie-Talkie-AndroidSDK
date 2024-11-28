@@ -465,7 +465,7 @@ class Recorder implements OutgoingAudioListener, AudioRecorder {
         private void sendVoiceMessage() {
             byte[] accumulatedData = outputStream.toByteArray();
             Message message = MessageHelper.createAudioMessage(mUserId, mReceiverId,
-                    mChannelType, accumulatedData, accumulatedData.length);
+                    mChannelType, accumulatedData, accumulatedData.length, mData);
             if (message != null) mConnection.send(message.getPayload());
         }
 
